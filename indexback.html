@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bit maker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favi/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favi/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favi/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/favi/manifest.json">
+    <link rel="mask-icon" href="/favi/safari-pinned-tab.svg" color="#c0392b">
+    <link rel="shortcut icon" href="/favi/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Bit Maker">
+    <meta name="application-name" content="Bit Maker">
+    <meta name="msapplication-config" content="/favi/browserconfig.xml">
+    <meta name="theme-color" content="#c0392b">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #eee;
+            width: 100%;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .toolbar {
+            background: #c0392b;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+        }
+        
+        .toolbar-title {
+            padding: 22px;
+            color: white;
+            font-size: 20px;
+            font-weight: 100;
+            display: inline-block;
+        }
+        
+        .toolbar img {
+            padding: 22px;
+            float: right;
+            cursor: pointer;
+        }
+        
+        .editor {
+            width: 100%;
+        }
+        
+        .red {
+            color: #c0392b;
+        }
+        
+        .footer {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            bottom: 5px;
+            display: inline-block;
+        }
+        
+        .footer div,
+        a {
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .footer a:link {
+            color: #c0392b;
+        }
+        
+        .footer a:visited {
+            color: #c0392b;
+        }
+        
+        .footer a:hover {
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="toolbar">
+        <div class="toolbar-title">Bit Maker 9000</div>
+        <img onClick="download()" alt="download" src="download.svg" />
+    </div>
+    <div id="editor" class="editor"></div>
+    <div class="footer">For students
+        <div class="red">&hearts;</div>
+        <a rel="noone" href="https://anikrajc.com/" target="_blank">Anik</a> and
+        <a rel="noone" href="http://joelhanson.me/" target="_blank">Joel</a>
+    </div>
+</body>
+<script src="ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="jspdf.min.js"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/dreamweaver");
+    editor.getSession().setTabSize(4);
+    editor.getSession().setUseWrapMode(true);
+    editor.setOptions({
+        maxLines: Infinity
+    });
+    editor.setHighlightActiveLine(false);
+    document.getElementById('editor').style.fontSize = '18px';
+    editor.setShowPrintMargin(false);
+    editor.commands.addCommand({
+        name: 'savei',
+        bindKey: {
+            win: 'Ctrl-S',
+            mac: 'Command-S'
+        },
+        exec: function(editor) {
+            download();
+        },
+        readOnly: true
+    });
+    editor.commands.addCommand({
+        name: 'openi',
+        bindKey: {
+            win: 'Ctrl-D',
+            mac: 'Command-D'
+        },
+        exec: function(editor) {
+            download();
+        },
+        readOnly: true
+    });
+
+
+
+
+
+    options = {
+        orientation: "p",
+        unit: "mm",
+        format: "a4"
+    };
+
+
+    function download() {
+        var doc = new jsPDF(options)
+        doc.setLineWidth(0.3)
+        doc.rect(0, 0, 52.5, 400)
+        doc.rect(52.5, 0, 52.52, 400)
+        doc.rect(105, 0, 52.5, 400)
+        doc.rect(157.5, 0, 52.5, 400)
+
+
+        doc.setFontSize(9)
+        var x = editor.getValue();
+        var lines = doc.splitTextToSize(x, 51);
+        var y = 0,
+            x = 0;
+        for (var i = 0; i < lines.length; i++, x++) {
+            if (x > 83) {
+                if (y > 150) {
+                    doc.addPage();
+                    doc.rect(0, 0, 52.5, 400)
+                    doc.rect(52.5, 0, 52.52, 400)
+                    doc.rect(105, 0, 52.5, 400)
+                    doc.rect(157.5, 0, 52.5, 400)
+                    y = -52.5;
+                    x = 0;
+                }
+                y = y + 52.5;
+                x = 0;
+            }
+            doc.text(1 + y, 4 + x * 3.5, lines[i]);
+        }
+
+        doc.save("bit.pdf");
+    }
+
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch(function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-91648791-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</html>

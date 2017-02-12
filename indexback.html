@@ -15,6 +15,7 @@
     <meta name="application-name" content="Bit Maker">
     <meta name="msapplication-config" content="/favi/browserconfig.xml">
     <meta name="theme-color" content="#c0392b">
+    <link href="./style.css" rel="stylesheet">
     <style>
         html,
         body {
@@ -50,6 +51,7 @@
         
         .editor {
             width: 100%;
+            z-index: 2;
         }
         
         .red {
@@ -62,6 +64,7 @@
             width: 100%;
             text-align: center;
             bottom: 5px;
+            z-index: 2;
             display: inline-block;
         }
         
@@ -82,24 +85,80 @@
         .footer a:hover {
             font-size: 20px;
         }
+        
+        .header {
+            float: left;
+        }
+        
+        .loaderparent {
+            justify-content: center;
+            align-items: center;
+            height: 50%;
+            display: none;
+        }
+        
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid red;
+            border-radius: 4px;
+        }
     </style>
 
 </head>
 
 <body>
-    <div class="toolbar">
-        <div class="toolbar-title">Bit Maker 9000</div>
-        <img onClick="download()" alt="download" src="download.svg" />
+    <div class="loaderparent">
+        <div class="loader"></div>
     </div>
-    <div id="editor" class="editor"></div>
-    <div class="footer">For students
-        <div class="red">&hearts;</div>
-        <a rel="noone" href="https://anikrajc.com/" target="_blank">Anik</a> and
-        <a rel="noone" href="http://joelhanson.me/" target="_blank">Joel</a>
+    <div class="nonloader" style="display: block">
+        <div class="toolbar">
+            <div class="header" style="display: none">
+                <img class="js-menu-show header__menu-toggle" alt="more vert" src="morevert.svg" />
+            </div>
+            <div class="toolbar-title">Bit Maker 9000</div>
+            <img onClick="download()" alt="download" src="download.svg" />
+            <img onClick="cloudit()" class="cloudsvg" alt="slash cloud" src="cloudslash.svg" />
+
+        </div>
+        <aside class="js-side-nav side-nav">
+            <nav class="js-side-nav-container side-nav__container">
+                <img class="js-menu-hide side-nav__hide" alt="more vert" src="close.svg" />
+                <header class="side-nav__header">
+                    Side Nav
+                </header>
+                <ul class="side-nav__content">
+                    <li id="bits"></li>
+                    <hr>
+                    <li onclick="signout()">Sign out</li>
+
+                </ul>
+            </nav>
+        </aside>
+        <div id="editor" class="editor"></div>
+        <div id="myModal" class="modal">
+
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Enter the file name</p>
+                <input type="text" class="filename" name="filename">
+                <button class="button">upload</button>
+            </div>
+
+        </div>
+        <div class="footer">For students
+            <div class="red">&hearts;</div>
+            <a rel="noone" href="https://anikrajc.com/" target="_blank">Anik</a> and
+            <a rel="noone" href="http://joelhanson.me/" target="_blank">Joel</a>
+        </div>
     </div>
+
 </body>
 <script src="ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="jspdf.min.js"></script>
+<script src="analytics.js" async></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/dreamweaver");
@@ -133,9 +192,6 @@
         },
         readOnly: true
     });
-
-
-
 
 
     options = {
@@ -179,7 +235,7 @@
         doc.save("bit.pdf");
     }
 
-
+    // service worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/sw.js').then(function(registration) {
@@ -191,20 +247,81 @@
             });
         });
     }
-    (function(i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function() {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
-        a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    // js lazy loader
+    function loadScript(e, t) {
+        var a = document.createElement("script");
+        a.type = "text/javascript", a.readyState ? a.onreadystatechange = function() {
+            ("loaded" == a.readyState || "complete" == a.readyState) && (a.onreadystatechange = null, t())
+        } : a.onload = function() {
+            t()
+        }, a.src = e, document.getElementsByTagName("head")[0].appendChild(a)
+    }
 
-    ga('create', 'UA-91648791-1', 'auto');
-    ga('send', 'pageview');
+    function loadStyle(e, t) {
+        var a = document.createElement("link");
+        a.rel = "stylesheet", a.readyState ? a.onreadystatechange = function() {
+            ("loaded" == a.readyState || "complete" == a.readyState) && (a.onreadystatechange = null, t())
+        } : a.onload = function() {
+            t()
+        }, a.href = e, document.getElementsByTagName("head")[0].appendChild(a)
+    }
+    // the lazyjs call after every thing is loaded
+
+    var everythingLoaded = setInterval(function() {
+        if (/loaded|complete/.test(document.readyState)) {
+            clearInterval(everythingLoaded);
+            // calling load
+            loadScript("/detabinator.js", function() {});
+            loadScript("/sidenav.js", function() {});
+
+
+        }
+    }, 10);
+    var datas;
+    window.onbeforeunload = function() {
+        localStorage.setItem(datas, editor.getValue())
+    }, window.onload = function() {
+        var o = localStorage.getItem(o);
+        null !== o && editor.setValue(o)
+    };
+    var user = false;
+
+    function cloudit() {
+        console.log(document.getElementsByClassName("cloudsvg")[0].src.split("/")[3]);
+        if (document.getElementsByClassName("cloudsvg")[0].src.split("/")[3] == "cloudupload.svg") {
+            console.log("upload");
+            modal.style.display = "block";
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            uploadbtn.onclick = function() {
+                    uploadbtn.innerHTML = "uploading";
+                    upload();
+                }
+                //  upload();
+            document.getElementsByClassName("cloudsvg")[0].src = "cloudqueue.svg";
+        } else if (document.getElementsByClassName("cloudsvg")[0].src.split("/")[3] == "cloudqueue.svg") {
+            console.log(document.getElementsByClassName("cloudsvg")[0].src.split("/")[3]);
+
+        } else {
+            document.getElementsByClassName("nonloader")[0].style.display = "none";
+            document.getElementsByClassName("loaderparent")[0].style.display = "flex";
+            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase.js", function() {});
+            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-app.js", function() {});
+            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-auth.js", function() {});
+            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-database.js", function() {});
+
+            loadScript("/firebase.js", function() {});
+        }
+
+
+    }
 </script>
+
 
 </html>

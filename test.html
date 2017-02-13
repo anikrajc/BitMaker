@@ -15,7 +15,6 @@
     <meta name="application-name" content="Bit Maker">
     <meta name="msapplication-config" content="/favi/browserconfig.xml">
     <meta name="theme-color" content="#c0392b">
-    <!--<link href="./style.css" rel="stylesheet">-->
     <style>
         html,
         body {
@@ -430,7 +429,6 @@
             text-align: center;
         }
     </style>
-
 </head>
 
 <body>
@@ -444,316 +442,90 @@
         </div>
     </div>
     <div id="loading-dialog-container" class="loading-dialog-container hidden">
-        <div class="dialog">
-            <svg class="circular" viewBox="25 25 50 50">
-      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-    </svg>
+        <div class="dialog"> <svg class="circular" viewBox="25 25 50 50"> <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/> </svg>
             <h2>Making your Bit</h2>
         </div>
     </div>
     <div class="toolbar">
-        <div class="toolbar-title">Bit Maker</div>
-        <img onClick="download()" alt="download" src="download.svg" />
-    </div>
-    <!--<div class="loaderparent">
-        <div class="loader"></div>
-    </div>
-    <div class="nonloader" style="display: block">
-        <div class="toolbar">
-            <div class="header" style="display: none">
-                <img class="js-menu-show header__menu-toggle" alt="more vert" src="morevert.svg" />
-            </div>
-            <div class="toolbar-title">Bit Maker</div>
-            <img onClick="download()" alt="download" src="download.svg" />
-            <img onClick="cloudit()" class="cloudsvg" alt="slash cloud" src="cloudslash.svg" />
-
-        </div>
-        <aside class="js-side-nav side-nav">
-            <nav class="js-side-nav-container side-nav__container">
-                <img class="js-menu-hide side-nav__hide" alt="more vert" src="close.svg" />
-                <header class="side-nav__header">
-                    Side Nav
-                </header>
-                <ul class="side-nav__content">
-                    <li id="bits"></li>
-                    <hr>
-                    <li onclick="signout()">Sign out</li>
-
-                </ul>
-            </nav>
-        </aside>-->
+        <div class="toolbar-title">Bit Maker</div><img onClick="download()" alt="download" src="download.svg" /> </div>
     <div id="editor" class="editor">
-
-
         <div id="question-clone" class="question-card" hidden>
-            <div class="question">
-                <input id="question" type="text" required/>
-                <label>Question</label>
-            </div>
-            <div class="question">
-                <textarea id="answer" required></textarea>
-                <label>Answer</label>
-            </div>
+            <div class="question"> <input id="question" type="text" required/> <label>Question</label> </div>
+            <div class="question"> <textarea id="answer" required></textarea> <label>Answer</label> </div>
         </div>
-
-        <div id="image-clone" class="image-card" hidden>
-            <input id="image" type="file" required/>
-            <h2>Images in beta. Only JPEG/JPG files for now. :)</h2>
+        <div id="image-clone" class="image-card" hidden> <input id="image" type="file" required/>
+            <h5>Images in beta. Only JPEG/JPG files for now. :)</h5>
         </div>
-
     </div>
-    <!--<div id="myModal" class="modal">
-
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Enter the file name</p>
-            <input type="text" class="filename" name="filename">
-            <button class="button">upload</button>
-        </div>
-
-    </div>-->
     <div class="footer">For students
-        <div class="red">&hearts;</div>
-        <a rel="noone" href="https://anikrajc.com/" target="_blank">Anik</a> and
-        <a rel="noone" href="http://joelhanson.me/" target="_blank">Joel</a>
+        <div class="red">&hearts;</div><a rel="noone" href="https://anikrajc.com/" target="_blank">Anik</a> and <a rel="noone" href="http://joelhanson.me/" target="_blank">Joel</a> </div>
     </div>
-    </div>
-
 </body>
 <script src="jspdf.min.js"></script>
-<!--<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-app.js" defer></script>-->
-<!--<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-auth.js" defer></script>-->
-<!--<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-database.js" defer></script>-->
-<!--<script src="/detabinator.js" defer></script>-->
-<!--<script src="/sidenav.js" defer></script>-->
 <script>
+    function fabClick() {
+        document.getElementById("fab-dialog-background").classList.toggle("hidden"), document.getElementById("dialog-container").classList.toggle("hidden")
+    }
+
+    function fabDialogClick(e) {
+        addToEditor(e), document.getElementById("fab-dialog-background").classList.toggle("hidden"), document.getElementById("dialog-container").classList.toggle("hidden")
+    }
+
+    function addToEditor(e) {
+        var n, d = document.getElementById("editor");
+        switch (e) {
+            case 1:
+                n = document.getElementById("question-clone");
+                break;
+            case 2:
+                n = document.getElementById("image-clone")
+        }
+        var o = n.cloneNode(!0);
+        o.id = "clonedItem" + cloneIndex, cloneIndex += 1, console.log(cloneIndex), o.hidden = !1, d.appendChild(o)
+    }
     options = {
         orientation: "p",
         unit: "mm",
         format: "a4"
-    };
-    processingImage = false;
-    cloneIndex = 0;
-
-    addToEditor(1);
-
-    function fabClick() {
-        document.getElementById("fab-dialog-background").classList.toggle("hidden");
-        document.getElementById("dialog-container").classList.toggle("hidden");
-    }
-
-    function fabDialogClick(a) {
-        addToEditor(a);
-        document.getElementById("fab-dialog-background").classList.toggle("hidden");
-        document.getElementById("dialog-container").classList.toggle("hidden");
-    }
-
-    function addToEditor(a) {
-        var editor = document.getElementById("editor");
-        var toClone;
-        switch (a) {
-            case 1:
-                toClone = document.getElementById("question-clone");
-                break;
-            case 2:
-                toClone = document.getElementById("image-clone");
-                break;
-        }
-        var clone = toClone.cloneNode(true);
-        clone.id = "clonedItem" + cloneIndex;
-        cloneIndex += 1;
-        console.log(cloneIndex);
-        clone.hidden = false;
-        editor.appendChild(clone);
-    }
-
+    }, processingImage = !1, cloneIndex = 0, addToEditor(1);
     async function download() {
-        document.getElementById("fab-dialog-background").classList.toggle("hidden");
-        document.getElementById("loading-dialog-container").classList.toggle("hidden");
-        var doc = new jsPDF(options);
-        doc.setLineWidth(0.3)
-        doc.rect(0, 0, 52.5, 400)
-        doc.rect(52.5, 0, 52.52, 400)
-        doc.rect(105, 0, 52.5, 400)
-        doc.rect(157.5, 0, 52.5, 400)
-
-        doc.setFontSize(9)
-            // var x = editor.getValue();
-            // var lines = doc.splitTextToSize(x, 51);
-        var y = 0,
-            x = 0;
-        for (var ii = 0; ii < cloneIndex; ii++) {
-            if (document.getElementById("clonedItem" + ii).children[0].id != "image") {
-                var question = doc.splitTextToSize(document.getElementById("clonedItem" + ii).children[0].children[0].value, 50);
-                for (var i = 0; i < question.length; i++, x++) {
-                    if (x > 83) {
-                        if (y > 150) {
-                            doc.addPage();
-                            doc.rect(0, 0, 52.5, 400)
-                            doc.rect(52.5, 0, 52.52, 400)
-                            doc.rect(105, 0, 52.5, 400)
-                            doc.rect(157.5, 0, 52.5, 400)
-                            y = -52.5;
-                            x = 0;
-                        }
-                        y = y + 52.5;
-                        x = 0;
-                    }
-                    doc.setFontType('bold');
-                    doc.text(1 + y, 4 + x * 3.5, question[i]);
-                }
-
-                var answer = doc.splitTextToSize(document.getElementById("clonedItem" + ii).children[1].children[0].value, 51);
-                for (var i = 0; i < answer.length; i++, x++) {
-                    if (x > 83) {
-                        if (y > 150) {
-                            doc.addPage();
-                            doc.rect(0, 0, 52.5, 400)
-                            doc.rect(52.5, 0, 52.52, 400)
-                            doc.rect(105, 0, 52.5, 400)
-                            doc.rect(157.5, 0, 52.5, 400)
-                            y = -52.5;
-                            x = 0;
-                        }
-                        y = y + 52.5;
-                        x = 0;
-                    }
-                    doc.setFontType('normal')
-                    doc.text(1 + y, 4 + x * 3.5, answer[i]);
-                }
-
+        document.getElementById("fab-dialog-background").classList.toggle("hidden"), document.getElementById("loading-dialog-container").classList.toggle("hidden");
+        var e = new jsPDF(options);
+        e.setLineWidth(.3), e.rect(0, 0, 52.5, 400), e.rect(52.5, 0, 52.52, 400), e.rect(105, 0, 52.5, 400), e.rect(157.5, 0, 52.5, 400), e.setFontSize(9);
+        for (var t = 0, n = 0, o = 0; cloneIndex > o; o++) {
+            if ("image" != document.getElementById("clonedItem" + o).children[0].id) {
+                for (var i = e.splitTextToSize(document.getElementById("clonedItem" + o).children[0].children[0].value, 50), d = 0; d < i.length; d++, n++) n > 83 && (t > 150 && (e.addPage(), e.rect(0, 0, 52.5, 400), e.rect(52.5, 0, 52.52, 400), e.rect(105, 0, 52.5, 400), e.rect(157.5, 0, 52.5, 400), t = -52.5, n = 0), t += 52.5, n = 0), e.setFontType("bold"), e.text(1 + t, 4 + 3.5 * n, i[d]);
+                for (var c = e.splitTextToSize(document.getElementById("clonedItem" + o).children[1].children[0].value, 51), d = 0; d < c.length; d++, n++) n > 83 && (t > 150 && (e.addPage(), e.rect(0, 0, 52.5, 400), e.rect(52.5, 0, 52.52, 400), e.rect(105, 0, 52.5, 400), e.rect(157.5, 0, 52.5, 400), t = -52.5, n = 0), t += 52.5, n = 0), e.setFontType("normal"), e.text(1 + t, 4 + 3.5 * n, c[d])
             } else {
                 console.log("image");
-                var f = document.getElementById("clonedItem" + ii).children[0].files[0];
-                if (!f.type.match('image.*')) {
-                    continue;
-                }
-                var reader = new FileReader();
-                reader.onload = (function(theFile) {
-                    return function(e) {
-
-                        // console.log(theFile.type.substring(6));
-                        // console.log(e.target.result);
-                        var xx = '';
-                        xx = xx + String(e.target.result);
-                        // console.log(xx);
-                        img = new Image();
-                        img.onload = function() {
-                            processingImage = false;
-                            if (x + ((50 / this.width) * this.height) / 3.2 > 83) {
-                                if (y > 150) {
-                                    doc.addPage();
-                                    doc.rect(0, 0, 52.5, 400)
-                                    doc.rect(52.5, 0, 52.52, 400)
-                                    doc.rect(105, 0, 52.5, 400)
-                                    doc.rect(157.5, 0, 52.5, 400)
-                                    y = -52.5;
-                                    x = 0;
-                                }
-                                y = y + 52.5;
-                                x = 0;
-                            }
-                            doc.addImage(xx, 'JPEG', 1 + y, 4 + x * 3.5, 50, ((50 / this.width) * this.height));
-                            x += ((50 / this.width) * this.height) / 3.2;
-                            console.log(((50 / this.width) * this.height) / 3.2);
-                            console.log(x);
-
-                        };
-                        // var _URL = window.URL || window.webkitURL;
-                        img.src = xx;
-                        // console.log(done);
-                    };
-                })(f);
-                processingImage = true;
-                reader.readAsDataURL(f);
-
-
+                var l = document.getElementById("clonedItem" + o).children[0].files[0];
+                if (!l.type.match("image.*")) continue;
+                var a = new FileReader;
+                a.onload = function() {
+                    return function(o) {
+                        var i = "";
+                        i += o.target.result + "", img = new Image, img.onload = function() {
+                            processingImage = !1, n + 50 / this.width * this.height / 3.2 > 83 && (t > 150 && (e.addPage(), e.rect(0, 0, 52.5, 400), e.rect(52.5, 0, 52.52, 400), e.rect(105, 0, 52.5, 400), e.rect(157.5, 0, 52.5, 400), t = -52.5, n = 0), t += 52.5, n = 0), e.addImage(i, "JPEG", 1 + t, 4 + 3.5 * n, 50, 50 / this.width * this.height), n += 50 / this.width * this.height / 3.2, console.log(50 / this.width * this.height / 3.2), console.log(n)
+                        }, img.src = i
+                    }
+                }(l), processingImage = !0, a.readAsDataURL(l)
             }
-            while (processingImage) await sleep(1000);
+            for (; processingImage;) await sleep(1e3)
         }
-        // console.log(done);
-        doc.save("bit.pdf");
-        document.getElementById("fab-dialog-background").classList.toggle("hidden");
-        document.getElementById("loading-dialog-container").classList.toggle("hidden");
+        e.save("bit.pdf"), document.getElementById("fab-dialog-background").classList.toggle("hidden"), document.getElementById("loading-dialog-container").classList.toggle("hidden")
     }
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    function sleep(e) {
+        return new Promise(resolve => setTimeout(resolve, e))
     }
-
-    // service worker
-    // if ('serviceWorker' in navigator) {
-    //     window.addEventListener('load', function() {
-    //         navigator.serviceWorker.register('/sw.js').then(function(registration) {
-    //             // Registration was successful
-    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //         }).catch(function(err) {
-    //             // registration failed :(
-    //             console.log('ServiceWorker registration failed: ', err);
-    //         });
-    //     });
-    // }
-    // js lazy loader
-    // function loadScript(e, t) {
-    //     var a = document.createElement("script");
-    //     a.type = "text/javascript", a.readyState ? a.onreadystatechange = function() {
-    //         ("loaded" == a.readyState || "complete" == a.readyState) && (a.onreadystatechange = null, t())
-    //     } : a.onload = function() {
-    //         t()
-    //     }, a.src = e, document.getElementsByTagName("head")[0].appendChild(a)
-    // }
-
-    // function loadStyle(e, t) {
-    //     var a = document.createElement("link");
-    //     a.rel = "stylesheet", a.readyState ? a.onreadystatechange = function() {
-    //         ("loaded" == a.readyState || "complete" == a.readyState) && (a.onreadystatechange = null, t())
-    //     } : a.onload = function() {
-    //         t()
-    //     }, a.href = e, document.getElementsByTagName("head")[0].appendChild(a)
-    // }
-    // var datas;
-    // window.onbeforeunload = function() {
-    //     localStorage.setItem(datas, editor.getValue())
-    // }, window.onload = function() {
-    //     var o = localStorage.getItem(o);
-    //     null !== o && editor.setValue(o)
-    // };
-    // var user = false;
-
-    // function cloudit() {
-    //     console.log(document.getElementsByClassName("cloudsvg")[0].src.split("/")[3]);
-    //     if (document.getElementsByClassName("cloudsvg")[0].src.split("/")[3] == "cloudupload.svg") {
-    //         console.log("upload");
-    //         modal.style.display = "block";
-    //         span.onclick = function() {
-    //             modal.style.display = "none";
-    //         }
-    //         window.onclick = function(event) {
-    //             if (event.target == modal) {
-    //                 modal.style.display = "none";
-    //             }
-    //         }
-    //         uploadbtn.onclick = function() {
-    //                 uploadbtn.innerHTML = "uploading";
-    //                 upload();
-    //             }
-    //             //  upload();
-    //         document.getElementsByClassName("cloudsvg")[0].src = "cloudqueue.svg";
-    //     } else if (document.getElementsByClassName("cloudsvg")[0].src.split("/")[3] == "cloudqueue.svg") {
-    //         console.log(document.getElementsByClassName("cloudsvg")[0].src.split("/")[3]);
-
-    //     } else {
-    //         document.getElementsByClassName("nonloader")[0].style.display = "none";
-    //         document.getElementsByClassName("loaderparent")[0].style.display = "flex";
-    //         loadScript("/firebase.js", function() {
-
-    //         });
-    //     }
-
-
-    // }
+    "serviceWorker" in navigator && window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/sw.js").then(function(e) {
+            console.log("ServiceWorker registration successful with scope: ", e.scope)
+        }).catch(function(e) {
+            console.log("ServiceWorker registration failed: ", e)
+        })
+    });
 </script>
-
 <script src="analytics.js" defer></script>
 
 </html>

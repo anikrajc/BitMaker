@@ -24,8 +24,6 @@
 
      firebase.auth().signInWithPopup(provider).then(function(result) {
          loadStyle("/style.css", function() {});
-         loadScript("/detabinator.js", function() {});
-         loadScript("/sidenav.js", function() {});
          var token = result.credential.accessToken;
          user = result.user;
          var email = user.email;

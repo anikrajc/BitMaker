@@ -162,6 +162,8 @@
 <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-app.js" async></script>
 <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-auth.js" async></script>
 <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-database.js" async></script>
+<script src="/detabinator.js" async></script>
+<script src="/sidenav.js" async></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/dreamweaver");
@@ -251,14 +253,7 @@
         });
     }
     // js lazy loader
-    function loadScript(e, t) {
-        var a = document.createElement("script");
-        a.type = "text/javascript", a.readyState ? a.onreadystatechange = function() {
-            ("loaded" == a.readyState || "complete" == a.readyState) && (a.onreadystatechange = null, t())
-        } : a.onload = function() {
-            t()
-        }, a.src = e, document.getElementsByTagName("head")[0].appendChild(a)
-    }
+
 
     function loadStyle(e, t) {
         var a = document.createElement("link");

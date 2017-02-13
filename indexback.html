@@ -159,6 +159,9 @@
 <script src="ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="jspdf.min.js"></script>
 <script src="analytics.js" async></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-app.js" async></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-auth.js" async></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase-database.js" async></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/dreamweaver");
@@ -265,18 +268,6 @@
             t()
         }, a.href = e, document.getElementsByTagName("head")[0].appendChild(a)
     }
-    // the lazyjs call after every thing is loaded
-
-    var everythingLoaded = setInterval(function() {
-        if (/loaded|complete/.test(document.readyState)) {
-            clearInterval(everythingLoaded);
-            // calling load
-            loadScript("/detabinator.js", function() {});
-            loadScript("/sidenav.js", function() {});
-
-
-        }
-    }, 10);
     var datas;
     window.onbeforeunload = function() {
         localStorage.setItem(datas, editor.getValue())
@@ -311,11 +302,6 @@
         } else {
             document.getElementsByClassName("nonloader")[0].style.display = "none";
             document.getElementsByClassName("loaderparent")[0].style.display = "flex";
-            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase.js", function() {});
-            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-app.js", function() {});
-            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-auth.js", function() {});
-            loadScript("https://www.gstatic.com/firebasejs/3.6.9/firebase-database.js", function() {});
-
             loadScript("/firebase.js", function() {});
         }
 

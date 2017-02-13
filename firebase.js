@@ -21,7 +21,11 @@
  }, 2000);
 
  function sign_in() {
+
      firebase.auth().signInWithPopup(provider).then(function(result) {
+         loadStyle("/style.css", function() {});
+         loadScript("/detabinator.js", function() {});
+         loadScript("/sidenav.js", function() {});
          var token = result.credential.accessToken;
          user = result.user;
          var email = user.email;
@@ -29,7 +33,6 @@
          uid = user.uid;
          document.getElementsByClassName("nonloader")[0].style.display = "block";
          document.getElementsByClassName("loaderparent")[0].style.display = "none";
-         loadStyle("/style.css", function() {});
          document.getElementsByClassName("header")[0].style.display = "block";
          document.getElementsByClassName("side-nav")[0].style.display = "block";
          document.getElementsByClassName("side-nav__header")[0].innerHTML = email;
